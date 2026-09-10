@@ -52,22 +52,73 @@
    └─ 失败 → 校正 SQL → 执行 SQL
 ```
 
+## 使用前需要自行准备（必读）
+
+仓库**不包含**任何密钥、模型权重和业务数据，clone 后需要自己准备：
+
+**1. Python 环境（≥ 3.11）与依赖**
+
+```powershell
+uv sync            # 推荐（已提供 uv.lock）
+# 或
+pip install -e .
+```
+
+**2. DeepSeek API Key**
+
+- 到 [platform.deepseek.com](https://platform.deepseek.com) 注册并创建 API Key
+- 填入 `.env` 的 `DEEPSEEK_API_KEY`（LLM 配置见 `conf/app_config.yaml`）
+
+**3. 五个外部服务**（端口固定，需先启动）
+
+| 服务 | 端口 | 用途 | 启动方式 |
+|---|---|---|---|
+| MySQL 8.0 | 3306 | meta 元数据库 + dw 数仓 | `docker-compose.yml` 或本地安装 |
+| Qdrant | 6333 | 列/指标向量召回 | `docker-compose.yml` |
+| Elasticsearch 8 | 9200 | 维度值全文召回 | `docker-compose.yml` |
+| Redis 7 | 6379 | 缓存 / 限流存储 | `docker-compose.yml` |
+| BGE Embedding | 8081 | 文本向量化 | 自行部署（见下） |
+
+- 前四个服务可用根目录 `docker-compose.yml` 启动
+- **BGE 模型权重（约 1.2GB）未随仓库上传**：需自行下载 `BAAI/bge-large-zh-v1.5` 并部署 embedding 服务
+
+**4. 数据库与数据**
+
+- 创建两个数据库：`meta`（元数据/字典/审计）与 `dw`（数仓）
+- 建表/初始化权限：`python app/scripts/init_permission_tables.py`
+- 准备业务数据（`fact_order`、`dim_region` 等，参考 `insert_missing_data.py`、`fix_region_id.py`）
+- 构建元数据向量知识库：`python app/scripts/build_meta_knowledge.py`
+
+**5. 配置文件**
+
+- 创建 `.env`（仓库不提供，模板如下）：
+  ```
+  DEEPSEEK_API_KEY=你的key
+  MYSQL_PASSWORD=你的密码
+  JWT_SECRET_KEY=随机长字符串
+  DICT_CACHE_TTL=300
+  ```
+- 修改 `conf/app_config.yaml`：数据库口令、各服务地址改为你自己的（当前为本地开发默认值）
+
 ## 快速启动
 
-1. **启动依赖服务**：MySQL(:3306)、Qdrant(:6333)、Elasticsearch(:9200)、Redis(:6379)、BGE Embedding 服务(:8081)。可参考 `docker-compose.yml` / `docker/docker-compose.yaml`（模型权重位于 `docker/embedding/bge-large-zh-v1.5/`）。
-2. **初始化数据库与知识库**：
-   - 建表/初始化权限：`python app/scripts/init_permission_tables.py`
-   - 构建元数据向量知识库：`python app/scripts/build_meta_knowledge.py`
-   - 补数/修复数据：参考 `insert_missing_data.py`、`fix_region_id.py`
-3. **配置环境变量**（`.env`，需自行创建，模板见下文）：
-   ```
-   DEEPSEEK_API_KEY=你的key
-   MYSQL_PASSWORD=你的密码
-   JWT_SECRET_KEY=随机长字符串
-   DICT_CACHE_TTL=300
-   ```
-4. **启动 API**：`uvicorn main:app --reload`（:8000）
-5. **启动前端**：`streamlit run app_ui.py`（:8501）
+```powershell
+# 1. 安装依赖
+uv sync
+
+# 2. 启动依赖服务（MySQL / Qdrant / ES / Redis；BGE Embedding 需自行部署）
+docker compose up -d mysql qdrant elasticsearch redis
+
+# 3. 初始化数据库与元数据知识库（前提见"使用前需要自行准备"）
+python app/scripts/init_permission_tables.py
+python app/scripts/build_meta_knowledge.py
+
+# 4. 配置 .env 与 conf/app_config.yaml
+
+# 5. 启动
+uvicorn main:app --reload     # API :8000
+streamlit run app_ui.py       # 前端 :8501
+```
 
 > 连接参数（数据库/向量库/LLM）位于 `conf/app_config.yaml`，元数据表结构定义位于 `conf/meta_config.yaml`。
 

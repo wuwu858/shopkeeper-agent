@@ -1,0 +1,49 @@
+## ⚠️ 关键表结构
+
+### fact_order
+- order_id, order_date, product_id, product_name, category, order_amount, region_id
+- ❌ 没有 province 字段！
+
+### dim_region
+- region_id, province, city, district
+
+### 关联条件
+- ✅ fact_order.region_id = dim_region.region_id
+- ❌ 禁止用 province 做关联！
+
+
+## 用户问题
+{query}
+
+## 可用的表结构
+{table_infos}
+
+## 可用的指标定义
+{metric_infos}
+
+## 业务字典
+{metric_dict}
+
+## 维度映射
+{dimension_dict}
+
+## 地区映射
+{region_mapping}
+
+## 当前日期信息
+{date_info}
+
+## 数据库信息
+{db_info}
+
+
+## 生成规则
+
+1. 表和字段：只使用 table_infos 中存在的表和字段
+2. 关联条件：必须用 fact_order.region_id = dim_region.region_id
+3. 指标计算：使用 metric_infos 中定义的口径
+4. 地区过滤：用 region_mapping 中的省份列表
+5. 安全：只允许 SELECT，禁止 SELECT *，必须包含 LIMIT
+6. 输出：只输出 SQL 语句，不要有任何解释、注释或 Markdown
+
+## SQL：

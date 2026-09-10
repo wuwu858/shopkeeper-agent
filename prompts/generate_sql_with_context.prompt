@@ -1,0 +1,71 @@
+## ⚠️ 关键表结构（必须严格遵守！）
+
+### fact_order（订单事实表）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| order_id | varchar(50) | 订单ID（主键） |
+| order_date | date | 订单日期 |
+| product_id | varchar(50) | 产品ID |
+| product_name | varchar(255) | 产品名称 |
+| category | varchar(255) | 产品分类 |
+| order_amount | decimal(10,2) | 订单金额 |
+| region_id | int | 地区ID（外键） |
+
+**❌ fact_order 表没有 province 字段！**
+
+### dim_region（地区维度表）
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| region_id | int | 地区ID（主键） |
+| province | varchar(100) | 省份名称 |
+| city | varchar(100) | 城市 |
+| district | varchar(100) | 区县 |
+
+### 表关联关系（唯一正确！）
+- ✅ fact_order.region_id = dim_region.region_id
+- ❌ 禁止用 province 做关联！
+
+---
+
+## 对话上下文
+{compressed_context}
+
+## 上一次执行的 SQL
+{last_sql}
+
+## 用户当前问题
+{query}
+
+## 可用的表结构
+{table_infos}
+
+## 可用的指标定义
+{metric_infos}
+
+## 业务字典
+{metric_dict}
+
+## 维度映射
+{dimension_dict}
+
+## 地区映射
+{region_mapping}
+
+## 当前日期信息
+{date_info}
+
+## 数据库信息
+{db_info}
+
+
+## 生成规则
+
+1. 理解上下文：用户可能是追问或补充条件，根据历史理解意图
+2. 表和字段：只使用 table_infos 中存在的表和字段
+3. 关联条件：必须用 fact_order.region_id = dim_region.region_id
+4. 指标计算：使用 metric_infos 中定义的口径
+5. 地区过滤：用 region_mapping 中的省份列表
+6. 安全：只允许 SELECT，禁止 SELECT *，必须包含 LIMIT
+7. 输出：只输出 SQL 语句，不要有任何解释、注释或 Markdown
+
+## SQL：

@@ -1,0 +1,47 @@
+tables:
+  - name: dim_region
+    role: dim
+    description: 地区维度表
+    columns:
+      - name: province
+        role: dimension
+        description: 省份名称
+        alias: [省份, 省]
+        sync: true
+      - name: region_id
+        role: dimension
+        description: 地区ID
+        alias: [地区编号]
+        sync: false
+
+  - name: fact_order
+    role: fact
+    description: 订单事实表
+    columns:
+      - name: order_amount  # ✅ 使用有值的字段
+        role: measure
+        description: 订单金额
+        alias: [金额, 销售额, 订单金额]
+        sync: false
+      - name: region_id
+        role: dimension
+        description: 地区ID
+        alias: [所属地区]
+        sync: false
+      - name: order_id
+        role: dimension
+        description: 订单ID
+        alias: [订单编号]
+        sync: false
+      - name: product_name
+        role: dimension
+        description: 产品名称
+        alias: [产品, 商品]
+        sync: false
+
+metrics:
+  - name: 销售总额
+    description: 所有订单的金额总和
+    relevant_columns:
+      - fact_order.order_amount  # ✅ 使用有值的字段
+    alias: [GMV, 成交总额, 订单总额, 总销售额]

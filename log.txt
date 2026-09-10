@@ -1,0 +1,244 @@
+
++--------------------- Traceback (most recent call last) ---------------------+
+| D:\shopkeeper-agent\.venv\Lib\site-packages\fastapi_cli\cli.py:150 in _run  |
+|                                                                             |
+|   147     with get_rich_toolkit() as toolkit:                               |
+|   148         server_type = "development" if command == "dev" else          |
+|       "production"                                                          |
+|   149                                                                       |
+| > 150         toolkit.print(f"Starting FastAPI in {server_type} mode",      |
+|       emoji="\u26a1\ufe0f")                                                           |
+|   151                                                                       |
+|   152         if verbose:                                                   |
+|   153             toolkit.print_line()                                      |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich_toolkit\toolkit.py:222 in  |
+| print                                                                       |
+|                                                                             |
+|   219     def print(                                                        |
+|   220         self, *renderables: RenderableType, end: str = "\n",          |
+|       **metadata: Any                                                       |
+|   221     ) -> None:                                                        |
+| > 222         self._print(*renderables, end=end, _force=False, **metadata)  |
+|   223                                                                       |
+|   224     def print_as_string(self, *renderables: RenderableType,           |
+|       **metadata: Any) -> str:                                              |
+|   225         with self.console.capture() as capture:                       |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich_toolkit\toolkit.py:211 in  |
+| _print                                                                      |
+|                                                                             |
+|   208         if self.mode == "json" and not _force:                        |
+|   209             return                                                    |
+|   210                                                                       |
+| > 211         self.console.print(                                           |
+|   212             *[                                                        |
+|   213                 self.style.render_element(renderable, **metadata)     |
+|   214                 for renderable in renderables                         |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:1704 in print   |
+|                                                                             |
+|   1701                 overflow = "ignore"                                  |
+|   1702             crop = False                                             |
+|   1703         render_hooks = self._render_hooks[:]                         |
+| > 1704         with self:                                                   |
+|   1705             renderables = self._collect_renderables(                 |
+|   1706                 objects,                                             |
+|   1707                 sep,                                                 |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:864 in __exit__ |
+|                                                                             |
+|    861                                                                      |
+|    862     def __exit__(self, exc_type: Any, exc_value: Any, traceback:     |
+|        Any) -> None:                                                        |
+|    863         """Exit buffer context."""                                   |
+| >  864         self._exit_buffer()                                          |
+|    865                                                                      |
+|    866     def begin_capture(self) -> None:                                 |
+|    867         """Begin capturing console output. Call :meth:`end_capture`  |
+|        to exit capture mode and return output."""                           |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:820 in          |
+| _exit_buffer                                                                |
+|                                                                             |
+|    817     def _exit_buffer(self) -> None:                                  |
+|    818         """Leave buffer context, and render content if required."""  |
+|    819         self._buffer_index -= 1                                      |
+| >  820         self._check_buffer()                                         |
+|    821                                                                      |
+|    822     def set_live(self, live: "Live") -> bool:                        |
+|    823         """Set Live instance. Used by Live context manager (no need  |
+|        to call directly).                                                   |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:2055 in         |
+| _check_buffer                                                               |
+|                                                                             |
+|   2052             return                                                   |
+|   2053                                                                      |
+|   2054         try:                                                         |
+| > 2055             self._write_buffer()                                     |
+|   2056         except BrokenPipeError:                                      |
+|   2057             self.on_broken_pipe()                                    |
+|   2058                                                                      |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:2091 in         |
+| _write_buffer                                                               |
+|                                                                             |
+|   2088                             if self.no_color and self._color_system: |
+|   2089                                 buffer =                             |
+|        list(Segment.remove_color(buffer))                                   |
+|   2090                                                                      |
+| > 2091                             legacy_windows_render(buffer,            |
+|        LegacyWindowsTerm(self.file))                                        |
+|   2092                         else:                                        |
+|   2093                             # Either a non-std stream on legacy      |
+|        Windows, or modern Windows.                                          |
+|   2094                             text =                                   |
+|        self._render_buffer(self._buffer[:])                                 |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\_windows_renderer.py:19 in |
+| legacy_windows_render                                                       |
+|                                                                             |
+|   16             if style:                                                  |
+|   17                 term.write_styled(text, style)                         |
+|   18             else:                                                      |
+| > 19                 term.write_text(text)                                  |
+|   20         else:                                                          |
+|   21             control_codes: Sequence[ControlCode] = control             |
+|   22             for control_code in control_codes:                         |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\_win32_console.py:402 in   |
+| write_text                                                                  |
+|                                                                             |
+|   399         Args:                                                         |
+|   400             text (str): The text to write to the console              |
+|   401         """                                                           |
+| > 402         self.write(text)                                              |
+|   403         self.flush()                                                  |
+|   404                                                                       |
+|   405     def write_styled(self, text: str, style: Style) -> None:          |
++-----------------------------------------------------------------------------+
+UnicodeEncodeError: 'gbk' codec can't encode character '\u26a1' in position 1: 
+illegal multibyte sequence
+
+During handling of the above exception, another exception occurred:
+
++--------------------- Traceback (most recent call last) ---------------------+
+| D:\shopkeeper-agent\.venv\Lib\site-packages\fastapi_cli\cli.py:404 in dev   |
+|                                                                             |
+|   401     """                                                               |
+|   402     os.environ.setdefault("FASTAPI_ENV", "development")               |
+|   403                                                                       |
+| > 404     _run(                                                             |
+|   405         path=path,                                                    |
+|   406         host=host,                                                    |
+|   407         port=port,                                                    |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\fastapi_cli\cli.py:147 in _run  |
+|                                                                             |
+|   144     public_url: str | None = None,                                    |
+|   145     verbose: bool = False,                                            |
+|   146 ) -> None:                                                            |
+| > 147     with get_rich_toolkit() as toolkit:                               |
+|   148         server_type = "development" if command == "dev" else          |
+|       "production"                                                          |
+|   149                                                                       |
+|   150         toolkit.print(f"Starting FastAPI in {server_type} mode",      |
+|       emoji="\u26a1\ufe0f")                                                           |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich_toolkit\toolkit.py:189 in  |
+| __exit__                                                                    |
+|                                                                             |
+|   186                                                                       |
+|   187         if self.mode == "human":                                      |
+|   188             if (renderable := self.style.render_context_exit()) is    |
+|       not None:                                                             |
+| > 189                 self.console.print(renderable)                        |
+|   190                                                                       |
+|   191         return None                                                   |
+|   192                                                                       |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:1704 in print   |
+|                                                                             |
+|   1701                 overflow = "ignore"                                  |
+|   1702             crop = False                                             |
+|   1703         render_hooks = self._render_hooks[:]                         |
+| > 1704         with self:                                                   |
+|   1705             renderables = self._collect_renderables(                 |
+|   1706                 objects,                                             |
+|   1707                 sep,                                                 |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:864 in __exit__ |
+|                                                                             |
+|    861                                                                      |
+|    862     def __exit__(self, exc_type: Any, exc_value: Any, traceback:     |
+|        Any) -> None:                                                        |
+|    863         """Exit buffer context."""                                   |
+| >  864         self._exit_buffer()                                          |
+|    865                                                                      |
+|    866     def begin_capture(self) -> None:                                 |
+|    867         """Begin capturing console output. Call :meth:`end_capture`  |
+|        to exit capture mode and return output."""                           |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:820 in          |
+| _exit_buffer                                                                |
+|                                                                             |
+|    817     def _exit_buffer(self) -> None:                                  |
+|    818         """Leave buffer context, and render content if required."""  |
+|    819         self._buffer_index -= 1                                      |
+| >  820         self._check_buffer()                                         |
+|    821                                                                      |
+|    822     def set_live(self, live: "Live") -> bool:                        |
+|    823         """Set Live instance. Used by Live context manager (no need  |
+|        to call directly).                                                   |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:2055 in         |
+| _check_buffer                                                               |
+|                                                                             |
+|   2052             return                                                   |
+|   2053                                                                      |
+|   2054         try:                                                         |
+| > 2055             self._write_buffer()                                     |
+|   2056         except BrokenPipeError:                                      |
+|   2057             self.on_broken_pipe()                                    |
+|   2058                                                                      |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\console.py:2091 in         |
+| _write_buffer                                                               |
+|                                                                             |
+|   2088                             if self.no_color and self._color_system: |
+|   2089                                 buffer =                             |
+|        list(Segment.remove_color(buffer))                                   |
+|   2090                                                                      |
+| > 2091                             legacy_windows_render(buffer,            |
+|        LegacyWindowsTerm(self.file))                                        |
+|   2092                         else:                                        |
+|   2093                             # Either a non-std stream on legacy      |
+|        Windows, or modern Windows.                                          |
+|   2094                             text =                                   |
+|        self._render_buffer(self._buffer[:])                                 |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\_windows_renderer.py:19 in |
+| legacy_windows_render                                                       |
+|                                                                             |
+|   16             if style:                                                  |
+|   17                 term.write_styled(text, style)                         |
+|   18             else:                                                      |
+| > 19                 term.write_text(text)                                  |
+|   20         else:                                                          |
+|   21             control_codes: Sequence[ControlCode] = control             |
+|   22             for control_code in control_codes:                         |
+|                                                                             |
+| D:\shopkeeper-agent\.venv\Lib\site-packages\rich\_win32_console.py:402 in   |
+| write_text                                                                  |
+|                                                                             |
+|   399         Args:                                                         |
+|   400             text (str): The text to write to the console              |
+|   401         """                                                           |
+| > 402         self.write(text)                                              |
+|   403         self.flush()                                                  |
+|   404                                                                       |
+|   405     def write_styled(self, text: str, style: Style) -> None:          |
++-----------------------------------------------------------------------------+
+UnicodeEncodeError: 'gbk' codec can't encode character '\u26a1' in position 1: 
+illegal multibyte sequence

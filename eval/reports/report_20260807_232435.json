@@ -1,0 +1,39 @@
+{
+  "total": 3,
+  "success_count": 0,
+  "success_rate": 0.0,
+  "sql_match_count": 0,
+  "sql_accuracy": 0.0,
+  "result_match_count": 0,
+  "result_accuracy": 0.0,
+  "avg_time": 19.187960386276245,
+  "details": [
+    {
+      "id": "q001",
+      "question": "统计华北地区的销售总额",
+      "success": false,
+      "sql_match": false,
+      "result_match": false,
+      "time": 30.686702728271484,
+      "error": ""
+    },
+    {
+      "id": "q002",
+      "question": "各个省份的销售额分别是多少",
+      "success": false,
+      "sql_match": false,
+      "result_match": false,
+      "time": 11.6334969997406,
+      "error": ""
+    },
+    {
+      "id": "q003",
+      "question": "GMV是多少",
+      "success": false,
+      "sql_match": false,
+      "result_match": false,
+      "time": 15.24368143081665,
+      "error": ""
+    }
+  ]
+}

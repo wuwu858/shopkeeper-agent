@@ -1,0 +1,30 @@
+{
+  "version": "1.0",
+  "questions": [
+    {
+      "id": "q001",
+      "question": "统计华北地区的销售总额",
+      "expected_sql": "SELECT SUM(order_amount) AS 销售总额 FROM fact_order JOIN dim_region ON region_id WHERE province IN ('北京市','天津市','河北省','山西省','内蒙古自治区')",
+      "expected_result": {"销售总额": 400.75},
+      "difficulty": "easy"
+    },
+    {
+      "id": "q002",
+      "question": "各个省份的销售额分别是多少",
+      "expected_sql": "SELECT dim_region.province AS 省份, SUM(fact_order.order_amount) AS 销售总额 FROM fact_order JOIN dim_region ON fact_order.region_id = dim_region.region_id GROUP BY dim_region.province",
+      "expected_result": [
+        {"省份": "广东省", "销售总额": 300.5},
+        {"省份": "北京市", "销售总额": 400.75},
+        {"省份": "上海市", "销售总额": 300.0}
+      ],
+      "difficulty": "medium"
+    },
+    {
+      "id": "q003",
+      "question": "GMV是多少",
+      "expected_sql": "SELECT SUM(order_amount) AS GMV FROM fact_order",
+      "expected_result": {"GMV": 1001.25},
+      "difficulty": "easy"
+    }
+  ]
+}

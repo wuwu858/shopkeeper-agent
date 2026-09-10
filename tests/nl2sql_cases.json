@@ -1,0 +1,43 @@
+{
+  "test_cases": [
+    {
+      "id": "TC_001",
+      "query": "华南地区的销售总额",
+      "expect": {
+        "tables": ["fact_order", "dim_region"],
+        "region": "华南",
+        "metric": "销售总额",
+        "should_contain": ["region_id", "province"]
+      }
+    },
+    {
+      "id": "TC_002",
+      "query": "华北地区的订单数量",
+      "expect": {
+        "tables": ["fact_order", "dim_region"],
+        "region": "华北",
+        "metric": "订单数量",
+        "should_contain": ["COUNT", "order_id"]
+      }
+    },
+    {
+      "id": "TC_003",
+      "query": "广东省的销售总额",
+      "expect": {
+        "tables": ["fact_order", "dim_region"],
+        "province": "广东省",
+        "metric": "销售总额",
+        "should_contain": ["广东省"]
+      }
+    },
+    {
+      "id": "TC_004",
+      "query": "2026年8月的销售额",
+      "expect": {
+        "tables": ["fact_order"],
+        "time": "2026-08",
+        "should_contain": ["order_date", "2026-08"]
+      }
+    }
+  ]
+}

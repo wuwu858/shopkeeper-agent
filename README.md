@@ -84,9 +84,8 @@ pip install -e .
 
 **4. 数据库与数据**
 
-- 创建两个数据库：`meta`（元数据/字典/审计）与 `dw`（数仓）
-- 建表/初始化权限：`python app/scripts/init_permission_tables.py`
-- 准备业务数据（`fact_order`、`dim_region` 等，参考 `insert_missing_data.py`、`fix_region_id.py`）
+- **一键初始化**（推荐）：`mysql -uroot -p < sql/init.sql` —— 自动创建 `meta` + `dw` 两库、全部表结构及演示数据
+- 或手动执行：`python app/scripts/init_permission_tables.py` 建权限表，参考 `insert_missing_data.py`、`fix_region_id.py` 准备业务数据
 - 构建元数据向量知识库：`python app/scripts/build_meta_knowledge.py`
 
 **5. 配置文件**
@@ -109,8 +108,10 @@ uv sync
 # 2. 启动依赖服务（MySQL / Qdrant / ES / Redis；BGE Embedding 需自行部署）
 docker compose up -d mysql qdrant elasticsearch redis
 
-# 3. 初始化数据库与元数据知识库（前提见"使用前需要自行准备"）
-python app/scripts/init_permission_tables.py
+# 3. 初始化数据库（一键建库建表 + 演示数据；前提见"使用前需要自行准备"）
+mysql -uroot -p < sql/init.sql
+
+# 3b. 构建元数据向量知识库（需 embedding 服务已启动）
 python app/scripts/build_meta_knowledge.py
 
 # 4. 配置 .env 与 conf/app_config.yaml
